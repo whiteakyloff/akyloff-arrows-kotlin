@@ -1,0 +1,68 @@
+# types: AIM, EXPLODE, TELEPORT (BY_ARROW, AT_POINT), FREEZE.
+
+messages:
+  prefix: '&6&lAkyloffArrows &7| &f'
+
+  no-permission: 'Недостаточно прав.'
+  incorrect-args: 'Недостаточно аргументов.'
+  usage: 'Используйте /arrows {player} {custom-arrow} чтобы выдать кастомную стрелу.'
+  null-args:
+    player: 'Данный игрок не найден.'
+    custom-arrow: 'Стрела с таким ID не найдена.'
+  successfully: 'Кастомная стрела ({custom-arrow}) была успешно выдана игроку {player}.'
+
+arrows:
+   - id: 'superarrow1'
+     item:
+        title: '§6§lСАМОНАВОДЯЩАЯСЯ СТРЕЛА'
+        amount: 16
+        lore:
+           - ''
+           - '§6§l⭔ §fСтрела будет сама наводиться на игрока'
+           - ''
+        color: '#55FF55'
+        effects:
+           - 'GLOWING:1:10'
+        flags:
+           - 'hide_potion_effects'
+     arrow-type: AIM
+     arrow-settings-aim: 10.0
+   - id: 'superarrow2'
+     item:
+        title: '§6§lВЗРЫВНАЯ СТРЕЛА'
+        amount: 16
+        lore:
+           - ''
+           - '§6§l⭔ §fВзрывается при попадении в игрока или блок'
+           - ''
+        color: '#FF5555'
+        flags:
+           - 'hide_potion_effects'
+     arrow-type: EXPLODE
+     arrow-settings-explode: 10, false, false
+   - id: 'superarrow3'
+     item:
+        title: '§6§lТЕЛЕПОРТИРУЩАЯ СТРЕЛА'
+        amount: 16
+        lore:
+           - ''
+           - '§6§l⭔ §fТелепортирует вас на место падения стрелы'
+           - ''
+        color: '#5555FF'
+        flags:
+           - 'hide_potion_effects'
+     arrow-type: TELEPORT
+     arrow-settings-teleport: BY_ARROW
+   - id: 'superarrow4'
+     item:
+        title: '§6§lЗАМОРАЖИВАЮЩАЯ СТРЕЛА'
+        amount: 16
+        lore:
+           - ''
+           - '§6§l⭔ §fЗамораживает игрока на 10 секунд'
+           - ''
+        color: '#AAAAAA'
+        flags:
+           - 'hide_potion_effects'
+     arrow-type: FREEZE
+     arrow-settings-freeze: 5, 5
