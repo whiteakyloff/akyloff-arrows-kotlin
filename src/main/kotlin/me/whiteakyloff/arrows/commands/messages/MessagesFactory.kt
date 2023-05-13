@@ -9,27 +9,26 @@ import org.bukkit.plugin.java.JavaPlugin
 
 import java.util.function.UnaryOperator
 
-class MessagesFactory(private val javaPlugin: AkyloffArrows)
+class MessagesFactory(javaPlugin: AkyloffArrows)
 {
     var prefix: String?
 
-    var messages: Map<String, Message>
+    var messages: MutableMap<String, Message>
 
     init {
-        val section = this.javaPlugin.config.getConfigurationSection("messages")
+        val section = javaPlugin.config.getConfigurationSection("messages")
 
         this.prefix = section.getString("prefix")
         this.messages = this.fromConfigurationToMap(section)
     }
 
-    private fun fromConfigurationToMap(section: ConfigurationSection) : Map<String, Message> {
+    private fun fromConfigurationToMap(section: ConfigurationSection) : MutableMap<String, Message> {
         val data = mutableMapOf<String, Message>()
 
         section.getKeys(false).forEach {
             if (section.isConfigurationSection(it)) {
-                fromConfigurationToMap(section.getConfigurationSection(it)).onEach { (keyMessage, message) ->
-                    data["$it.$keyMessage"] = message
-                }
+                fromConfigurationToMap(section.getConfigurationSection(it))
+                    .onEach { (keyMessage, message) -> data["$it.$keyMessage"] = message }
             } else {
                 var message: Message? = null
 
@@ -44,44 +43,44 @@ class MessagesFactory(private val javaPlugin: AkyloffArrows)
         }
         return data
     }
+}
 
-    data class Message(val value: Any)
-    {
-        fun sendMessage(sender: CommandSender, replace: UnaryOperator<String>) {
-            this.sendMessage(sender, usePrefix = getPrefix() != null, replace)
-        }
+data class Message(val value: Any)
+{
+    fun sendMessage(sender: CommandSender, replace: UnaryOperator<String>) {
+        this.sendMessage(sender, usePrefix = getPrefix() != null, replace)
+    }
 
-        @Suppress("UNCHECKED_CAST")
-        private fun sendMessage(sender: CommandSender, usePrefix: Boolean, replace: UnaryOperator<String>) {
-            when (value) {
-                is String -> {
-                    var message = replace.apply(value.toString())
+    @Suppress("UNCHECKED_CAST")
+    private fun sendMessage(sender: CommandSender, usePrefix: Boolean, replace: UnaryOperator<String>) {
+        when (value) {
+            is String -> {
+                var message = replace.apply(value.toString())
+
+                if (usePrefix && getPrefix() != null) {
+                    message = getPrefix() + message
+                }
+                sender.sendMessage(message.translateColor())
+            }
+            is List<*> -> {
+                (value as List<String>).forEach {
+                    var message = replace.apply(it)
 
                     if (usePrefix && getPrefix() != null) {
                         message = getPrefix() + message
                     }
                     sender.sendMessage(message.translateColor())
                 }
-                is List<*> -> {
-                    (value as List<String>).forEach {
-                        var message = replace.apply(it)
-
-                        if (usePrefix && getPrefix() != null) {
-                            message = getPrefix() + message
-                        }
-                        sender.sendMessage(message.translateColor())
-                    }
-                }
-                else -> { sender.sendMessage("unsupported object type") }
             }
+            else -> { sender.sendMessage("Unsupported object type") }
         }
+    }
 
-        companion object {
-            fun getPrefix(): String? = JavaPlugin.getPlugin(AkyloffArrows::class.java)
-                .messagesFactory.prefix
+    companion object {
+        fun getPrefix(): String? = JavaPlugin.getPlugin(AkyloffArrows::class.java)
+            .messagesFactory.prefix
 
-            fun getByName(key: String): Message? = JavaPlugin.getPlugin(AkyloffArrows::class.java)
-                .messagesFactory.messages[key]
-        }
+        fun getByName(key: String): Message? = JavaPlugin.getPlugin(AkyloffArrows::class.java)
+            .messagesFactory.messages[key]
     }
 }

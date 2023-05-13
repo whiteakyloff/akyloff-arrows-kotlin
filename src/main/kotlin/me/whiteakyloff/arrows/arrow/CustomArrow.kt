@@ -8,7 +8,7 @@ import java.util.UUID
 
 data class CustomArrow(
     val name: String,
-    val UUID: UUID,
+    val uuid: UUID,
     val itemStack: ItemStack,
     val arrowData: Map<String, String>,
     val arrowAbilities: List<CustomArrowAbility>

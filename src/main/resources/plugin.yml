@@ -1,5 +1,5 @@
 name: AkyloffArrows
-version: "${version}"
+version: "2.0"
 main: me.whiteakyloff.arrows.AkyloffArrows
 depend: [ ProtocolLib ]
 website: "t.me/whiteakyloff"

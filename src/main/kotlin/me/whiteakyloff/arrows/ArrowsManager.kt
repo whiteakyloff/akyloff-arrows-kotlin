@@ -45,7 +45,7 @@ class ArrowsManager(private val javaPlugin: AkyloffArrows)
     }
 
     private fun getArrow(uuid: UUID) : CustomArrow? {
-        return this.arrows.firstOrNull { it.UUID == uuid }
+        return this.arrows.firstOrNull { it.uuid == uuid }
     }
 
     fun getArrow(name: String) : CustomArrow? {
@@ -63,7 +63,7 @@ class ArrowsManager(private val javaPlugin: AkyloffArrows)
     }
 
     fun disableManager() {
-        this.arrows.forEach { this.fileConfiguration.set("arrows-uuids.${it.name}", it.UUID.toString()) }
+        this.arrows.forEach { this.fileConfiguration.set("arrows-uuids.${it.name}", it.uuid.toString()) }
             .also { this.javaPlugin.saveFile(this.fileConfiguration, "arrows-data.yml") }
     }
 

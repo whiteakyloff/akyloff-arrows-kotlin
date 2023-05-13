@@ -1,7 +1,7 @@
 package me.whiteakyloff.arrows.utils
 
 import me.whiteakyloff.arrows.AkyloffArrows
-import me.whiteakyloff.arrows.commands.messages.MessagesFactory
+import me.whiteakyloff.arrows.commands.messages.Message
 
 import org.bukkit.ChatColor
 import org.bukkit.Color
@@ -17,7 +17,7 @@ import java.io.IOException
 import java.util.function.UnaryOperator
 
 fun CommandSender.sendMessage(key: String, replace: UnaryOperator<String>) {
-    MessagesFactory.Message.getByName(key)!!.sendMessage(this, replace)
+    Message.getByName(key)!!.sendMessage(this, replace)
 }
 
 fun JavaPlugin.saveFile(config: FileConfiguration, fileName: String?): FileConfiguration {
