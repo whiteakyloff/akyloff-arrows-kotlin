@@ -49,7 +49,7 @@ class ArrowsManager(private val javaPlugin: AkyloffArrows)
     }
 
     fun getArrow(name: String) : CustomArrow? {
-        return this.arrows.firstOrNull { it.name.equals(name, true) }
+        return this.arrows.firstOrNull { it.name.equals(name, ignoreCase = true) }
     }
 
     fun getArrow(itemStack: ItemStack) : CustomArrow? {
