@@ -1,6 +1,5 @@
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.8.21"
-    id("xyz.jpenilla.run-paper") version "2.1.0"
     id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
@@ -35,7 +34,6 @@ java {
 
 tasks {
     jar {
-        enabled = false
         this.dependsOn(shadowJar)
     }
     shadowJar {
@@ -44,8 +42,5 @@ tasks {
         this.relocate("com.okkero.skedule", "$group.utils.dependencies.skedule")
         this.relocate("de.tr7zw.changeme.nbtapi", "$group.utils.dependencies.nbtapi")
         this.relocate("de.tr7zw.annotations", "$group.utils.dependencies.nbtapi.annotations")
-    }
-    runServer {
-        minecraftVersion("1.12.2")
     }
 }
