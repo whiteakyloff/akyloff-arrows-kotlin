@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack
 
 import java.util.UUID
 
-data class CustomArrow(
+data class CustomArrow (
     val name: String,
     val uuid: UUID,
     val itemStack: ItemStack,
