@@ -13,12 +13,10 @@ data class CustomArrow (
     val arrowData: Map<String, String>,
     val arrowAbilities: List<CustomArrowAbility>
 ) {
-    enum class CustomArrowType(private val ability: CustomArrowAbility)
+    enum class CustomArrowType(val ability: CustomArrowAbility)
     {
         AIM(AimAbility), EXPLODE(ExplodeAbility),
         TELEPORT(TeleportAbility), FREEZE(FreezeAbility);
-
-        fun getAbility() : CustomArrowAbility = ability
     }
 }
 

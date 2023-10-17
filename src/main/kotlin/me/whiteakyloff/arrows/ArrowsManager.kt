@@ -8,7 +8,6 @@ import me.whiteakyloff.arrows.utils.ItemBuilder
 import me.whiteakyloff.arrows.utils.*
 
 import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
@@ -26,17 +25,14 @@ class ArrowsManager(private val javaPlugin: AkyloffArrows)
     init {
         for (section in javaPlugin.config.getList("arrows") as List<Map<String, Any>>) {
             val arrowName = section["id"].toString()
-            val arrowUUID = if (fileConfiguration.getString("arrows-uuids.$arrowName") != null) {
-                UUID.fromString(fileConfiguration.getString("arrows-uuids.$arrowName"))
-            } else {
-                UUID.randomUUID()
-            }
+            val arrowUUID = UUID.fromString(fileConfiguration.getString("arrows-uuids.$arrowName")
+                ?: UUID.randomUUID().toString())
             val itemBuilder = ItemBuilder.loadItemBuilder(section["item"] as HashMap<String, Any>)
             val itemStack = NBTItem(itemBuilder.build()).apply { this.setUUID("arrow-uuid", arrowUUID) }.item
 
             val arrowAbilities = section["arrow-type"].toString().split(", ")
-                .map { CustomArrow.CustomArrowType.valueOf(it.uppercase()).getAbility() }
-                .toMutableList()
+                .map { CustomArrow.CustomArrowType.valueOf(it.uppercase()).ability }
+                .toList()
             val arrowData = section.entries
                 .filter { it.key.startsWith("arrow-settings") }
                 .associateBy({ it.key.replace("arrow-settings-", "") }, { it.value.toString() })
@@ -44,32 +40,22 @@ class ArrowsManager(private val javaPlugin: AkyloffArrows)
         }
     }
 
-    private fun getArrow(uuid: UUID) : CustomArrow? {
-        return this.arrows.firstOrNull { it.uuid == uuid }
-    }
+    private fun getArrow(uuid: UUID): CustomArrow? = this.arrows.firstOrNull { it.uuid == uuid }
 
-    fun getArrow(name: String) : CustomArrow? {
-        return this.arrows.firstOrNull { it.name.equals(name, ignoreCase = true) }
-    }
+    fun getArrow(name: String): CustomArrow? = this.arrows.firstOrNull { it.name.equals(name, ignoreCase = true) }
 
-    fun getArrow(itemStack: ItemStack) : CustomArrow? {
-        return NBTItem(itemStack).let {
-            if (!it.hasTag("arrow-uuid")) {
-                null
-            } else {
-                this.getArrow(it.getUUID("arrow-uuid"))
-            }
-        }
+    fun getArrow(itemStack: ItemStack): CustomArrow? {
+        return NBTItem(itemStack).takeIf { it.hasTag("arrow-uuid") }?.let { this.getArrow(it.getUUID("arrow-uuid")) }
     }
 
     fun disableManager() {
-        this.arrows.forEach { this.fileConfiguration.set("arrows-uuids.${it.name}", it.uuid.toString()) }
-            .also { this.javaPlugin.saveFile(this.fileConfiguration, "arrows-data.yml") }
+        this.arrows.forEach {
+            fileConfiguration.set("arrows-uuids.${it.name}", it.uuid.toString())
+        }
+        this.javaPlugin.saveFile(fileConfiguration, "arrows-data.yml")
     }
 
     companion object {
-        val sphereContainer = mutableMapOf<Player?, CustomSphere>()
-
-        val teleportContainer= mutableMapOf<Player?, Arrow>()
+        val sphereContainer by lazy { mutableMapOf<Player?, CustomSphere>() }
     }
 }

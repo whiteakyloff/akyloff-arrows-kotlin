@@ -70,7 +70,7 @@ class CustomSphere(private val hitPlayer: Player)
 
     fun spawn() {
         this.hitPlayer.world.getNearbyEntities(this.hitPlayer.location, 40.0, 40.0, 40.0)
-            .filterIsInstance<Player>().forEach { spawn(it) }
+            .filterIsInstance<Player>().forEach { this.spawn(it) }
     }
 
     private fun spawn(player: Player) {

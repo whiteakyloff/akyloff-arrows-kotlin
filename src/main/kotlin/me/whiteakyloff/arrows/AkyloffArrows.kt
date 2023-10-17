@@ -12,9 +12,7 @@ class AkyloffArrows : JavaPlugin()
 
     lateinit var messagesFactory: MessagesFactory
 
-    override fun onLoad() {
-        this.saveDefaultConfig()
-    }
+    override fun onLoad() = this.saveDefaultConfig()
 
     override fun onEnable() {
         this.arrowsManager = ArrowsManager(this)
@@ -24,7 +22,5 @@ class AkyloffArrows : JavaPlugin()
         Bukkit.getPluginManager().registerEvents(ArrowsListener(this), this)
     }
 
-    override fun onDisable() {
-        this.arrowsManager.disableManager()
-    }
+    override fun onDisable() = this.arrowsManager.disableManager()
 }

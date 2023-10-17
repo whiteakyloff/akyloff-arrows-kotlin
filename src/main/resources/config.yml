@@ -1,10 +1,9 @@
-# types: AIM, EXPLODE, TELEPORT (BY_ARROW, AT_POINT), FREEZE.
+# types: AIM, EXPLODE, TELEPORT, FREEZE.
 
 messages:
   prefix: '&6&lAkyloffArrows &7| &f'
 
   no-permission: 'Недостаточно прав.'
-  incorrect-args: 'Недостаточно аргументов.'
   usage: 'Используйте /arrows {player} {custom-arrow} чтобы выдать кастомную стрелу.'
   null-args:
     player: 'Данный игрок не найден.'
@@ -52,7 +51,6 @@ arrows:
         flags:
            - 'hide_potion_effects'
      arrow-type: TELEPORT
-     arrow-settings-teleport: BY_ARROW
    - id: 'superarrow4'
      item:
         title: '§6§lЗАМОРАЖИВАЮЩАЯ СТРЕЛА'

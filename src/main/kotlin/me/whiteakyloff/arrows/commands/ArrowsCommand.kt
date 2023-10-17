@@ -12,32 +12,24 @@ import org.bukkit.inventory.ItemStack
 
 class ArrowsCommand(private val javaPlugin: AkyloffArrows) : CommandExecutor
 {
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
         if (!sender.hasPermission("arrows.give")) {
-            sender.sendMessage(key = "no-permission") { message -> message }
-            return true
-        }
-        if (args.isEmpty()) {
-            sender.sendMessage(key = "usage") { message -> message }
+            sender.sendMessage(key = "no-permission") { it }
             return true
         }
         if (args.size != 2) {
-            sender.sendMessage(key = "incorrect-args") { message -> message }
+            sender.sendMessage(key = "usage") { it }
             return true
         }
         val player = Bukkit.getPlayer(args[0])
         val customArrow = this.javaPlugin.arrowsManager.getArrow(args[1])
 
-        if (player == null) {
-            sender.sendMessage(key = "null-args.player") { message -> message }
-            return true
-        }
-        if (customArrow == null) {
-            sender.sendMessage(key = "null-args.custom-arrow") { message -> message }
+        if (player == null || customArrow == null) {
+            sender.sendMessage(key = "null-args.${if (player == null) "player" else "custom-arrow"}") { it }
             return true
         }
         this.giveItem(player, customArrow.itemStack)
-        sender.sendMessage(key = "successfully") { message -> message.replace("{player}", player.name).replace("{custom-arrow}", customArrow.name) }
+        sender.sendMessage(key = "successfully") { it.replace("{player}", player.name).replace("{custom-arrow}", customArrow.name) }
         return true
     }
 

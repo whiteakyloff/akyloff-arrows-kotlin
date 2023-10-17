@@ -5,18 +5,10 @@ import me.whiteakyloff.arrows.arrow.CustomArrow
 import org.bukkit.event.*
 import org.bukkit.entity.Arrow
 
-data class ArrowFlyingEvent(val arrow: Arrow, val customArrow: CustomArrow) : Event()
-{
-    override fun getHandlers(): HandlerList {
-        return getHandlerList()
-    }
+data class ArrowFlyingEvent(
+    val arrow: Arrow, val customArrow: CustomArrow
+) : Event() {
+    override fun getHandlers(): HandlerList = handlerList
 
-    companion object {
-        private val handlers = HandlerList()
-
-        @JvmStatic
-        fun getHandlerList(): HandlerList {
-            return handlers
-        }
-    }
+    companion object { val handlerList = HandlerList() }
 }

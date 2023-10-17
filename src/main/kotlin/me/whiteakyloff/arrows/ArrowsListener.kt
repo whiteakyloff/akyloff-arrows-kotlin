@@ -2,7 +2,6 @@ package me.whiteakyloff.arrows
 
 import me.whiteakyloff.arrows.utils.setMetadata
 import me.whiteakyloff.arrows.arrow.abilities.AimAbility
-import me.whiteakyloff.arrows.arrow.abilities.TeleportAbility
 import me.whiteakyloff.arrows.arrow.events.ArrowFlyingEvent
 import me.whiteakyloff.arrows.arrow.events.ArrowHitEvent
 
@@ -42,16 +41,12 @@ class ArrowsListener(private val javaPlugin: AkyloffArrows) : Listener
                 val customArrow = event.customArrow
                 val shooter = arrow.shooter as Player
 
-                customArrow.arrowAbilities.asSequence()
-                    .filter {
-                        it == AimAbility || (it == TeleportAbility && customArrow.arrowData["teleport"].equals("BY_ARROW", ignoreCase = true))
-                    }
-                    .forEach { it.apply(shooter, arrow, customArrow, null) }
-                if (arrow.hasMetadata("hit-arrow")) {
-                    val hitEvent = arrow.getMetadata("hit-arrow")[0].value() as ProjectileHitEvent
+                customArrow.arrowAbilities.first {
+                    it == AimAbility
+                }.apply(shooter, arrow, customArrow, null)
 
-                    Bukkit.getPluginManager().callEvent(ArrowHitEvent(shooter, arrow, customArrow, hitEvent.hitEntity))
-                    this.cancel()
+                arrow.getMetadata("hit-arrow").firstOrNull { it.value() is ProjectileHitEvent }?.let {
+                    Bukkit.getPluginManager().callEvent(ArrowHitEvent(shooter, (it.value() as ProjectileHitEvent).hitEntity, arrow, customArrow))
                 }
             }
         }.runTaskTimer(this.javaPlugin, 1L, 1L)
@@ -66,15 +61,9 @@ class ArrowsListener(private val javaPlugin: AkyloffArrows) : Listener
 
     @EventHandler
     fun onHitArrow(event: ArrowHitEvent) {
-        val arrow = event.arrow
-        val shooter = event.shooter
-
         event.customArrow.arrowAbilities
             .filterNot { it == AimAbility }.forEach { it.apply(event) }
-        if (ArrowsManager.teleportContainer.containsValue(arrow)) {
-            ArrowsManager.teleportContainer.remove(shooter, arrow)
-        }
-        arrow.remove()
+        event.arrow.remove()
     }
 
     @EventHandler
