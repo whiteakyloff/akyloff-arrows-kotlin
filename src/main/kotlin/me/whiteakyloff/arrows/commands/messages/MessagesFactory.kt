@@ -30,15 +30,12 @@ class MessagesFactory(javaPlugin: AkyloffArrows)
                 fromConfigurationToMap(section.getConfigurationSection(it))
                     .onEach { (keyMessage, message) -> data["$it.$keyMessage"] = message }
             } else {
-                var message: Message? = null
-
-                if (section.isString(it)) {
-                    message = Message(section.getString(it))
+                val message = when {
+                    section.isString(key) -> Message(section.getString(key))
+                    section.isList(key) -> Message(section.getStringList(key))
+                    else -> null
                 }
-                else if (section.isList(it)) {
-                    message = Message(section.getStringList(it))
-                }
-                if (message != null) { data[it] = message }
+                message?.let { data[key] = it }
             }
         }
         return data
